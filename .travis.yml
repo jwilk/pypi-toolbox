@@ -1,0 +1,18 @@
+language: python
+python:
+- "3.2"
+- "3.3"
+- "3.4"
+- "3.5"
+- "3.6"
+- "3.7-dev"
+dist: trusty
+sudo: false
+install:
+- pip install pydiatra pyflakes
+script:
+- python3 -m pydiatra .
+- python3 -m pyflakes .
+- ./pypi-list-classifiers
+
+# vim:ts=2 sts=2 sw=2 et
