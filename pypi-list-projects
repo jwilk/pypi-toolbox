@@ -1,0 +1,45 @@
+#!/usr/bin/env python3
+
+# Copyright © 2018 Jakub Wilk <jwilk@jwilk.net>
+# SPDX-License-Identifier: MIT
+
+import argparse
+import http.client
+import re
+import sys
+import urllib.request
+
+ap = argparse.ArgumentParser()
+ap.add_argument('project', metavar='PROJECT', nargs='?')
+options = ap.parse_args()
+
+if options.project is not None:
+    proj = options.project
+    url = 'https://pypi.org/simple/{proj}/'.format(
+        proj=urllib.parse.quote(proj, safe='')
+    )
+    try:
+        fp = urllib.request.urlopen(url)
+    except urllib.error.HTTPError as exc:
+        if exc.code == http.client.NOT_FOUND:
+            msg = '{prog}: {proj}: not found'.format(prog=ap.prog, proj=proj)
+            print(msg, file=sys.stderr)
+            sys.exit(1)
+        else:
+            raise
+    else:
+        with fp:
+            proj = fp.url.split('/')[-2]
+            print(proj)
+else:
+    search_for_a = re.compile(br'<a href="[^>]*">([^<]+)</a>').search
+    with urllib.request.urlopen('https://pypi.org/simple/') as fp:
+        for line in fp:
+            match = search_for_a(line)
+            if match is None:
+                continue
+            project = match.group(1)
+            project = project.decode('ASCII')
+            print(project)
+
+# vim:ts=4 sts=4 sw=4 et
