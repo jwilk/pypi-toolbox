@@ -14,5 +14,7 @@ script:
 - python3 -m pydiatra .
 - python3 -m pyflakes .
 - ./pypi-list-classifiers
+- ./pypi-list-projects | tail -n 10
+- ./pypi-list-projects argparse
 
 # vim:ts=2 sts=2 sw=2 et
