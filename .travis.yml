@@ -7,7 +7,6 @@ python:
 - "3.6"
 - "3.7-dev"
 dist: trusty
-sudo: false
 before_install:
 - pyflakes=pyflakes
 - if [[ $TRAVIS_PYTHON_VERSION = 3.[23] ]]; then pyflakes='pyflakes<2'; fi
