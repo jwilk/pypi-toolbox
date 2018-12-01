@@ -3,11 +3,21 @@
 # Copyright © 2018 Jakub Wilk <jwilk@jwilk.net>
 # SPDX-License-Identifier: MIT
 
+import os
+import signal
 import urllib.request
 
-with urllib.request.urlopen('https://pypi.org/pypi?:action=list_classifiers') as fp:
-    for line in fp:
-        line = line.decode('ASCII').rstrip()
-        print(line)
+def main():
+    with urllib.request.urlopen('https://pypi.org/pypi?:action=list_classifiers') as fp:
+        for line in fp:
+            line = line.decode('ASCII').rstrip()
+            print(line)
+
+try:
+    main()
+except BrokenPipeError:
+    signal.signal(signal.SIGPIPE, signal.SIG_DFL)
+    os.kill(os.getpid(), signal.SIGPIPE)
+    raise
 
 # vim:ts=4 sts=4 sw=4 et
