@@ -5,7 +5,11 @@
 
 import os
 import signal
+import sys
 import urllib.request
+
+if sys.version_info < (3, 3):
+    raise RuntimeError('Python >= 3.3 is required')
 
 def main():
     with urllib.request.urlopen('https://pypi.org/pypi?:action=list_classifiers') as fp:
