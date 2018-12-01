@@ -1,6 +1,5 @@
 language: python
 python:
-- "3.2"
 - "3.3"
 - "3.4"
 - "3.5"
@@ -9,7 +8,7 @@ python:
 dist: trusty
 before_install:
 - pyflakes=pyflakes
-- if [[ $TRAVIS_PYTHON_VERSION = 3.[23] ]]; then pyflakes='pyflakes<2'; fi
+- if [[ $TRAVIS_PYTHON_VERSION = 3.3 ]]; then pyflakes='pyflakes<2'; fi
 install:
 - python3 -m pip install pydiatra $pyflakes
 script:
