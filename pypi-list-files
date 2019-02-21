@@ -1,0 +1,62 @@
+#!/usr/bin/env python3
+
+# Copyright © 2018-2019 Jakub Wilk <jwilk@jwilk.net>
+# SPDX-License-Identifier: MIT
+
+import argparse
+import html
+import http.client
+import os
+import re
+import signal
+import sys
+import urllib.request
+import urllib.parse
+
+if sys.version_info < (3, 4):
+    raise RuntimeError('Python >= 3.4 is required')
+
+ap = argparse.ArgumentParser()
+ap.add_argument('project', metavar='PROJECT')
+options = ap.parse_args()
+
+def html_decode(s):
+    return html.unescape(s.decode('UTF-8'))
+
+def strip_fragment(url):
+    tup = urllib.parse.urlsplit(url)
+    tup = tup._replace(fragment='')
+    return urllib.parse.urlunsplit(tup)
+
+def main():
+    proj = options.project
+    url = 'https://pypi.org/simple/{proj}/'.format(
+        proj=urllib.parse.quote(proj, safe='')
+    )
+    try:
+        fp = urllib.request.urlopen(url)
+    except urllib.error.HTTPError as exc:
+        if exc.code == http.client.NOT_FOUND:
+            msg = '{prog}: {proj}: not found'.format(prog=ap.prog, proj=proj)
+            print(msg, file=sys.stderr)
+            sys.exit(1)
+        else:
+            raise
+    search_for_a = re.compile(br'<a href="([^>]*)">([^<]+)</a>').search
+    with fp:
+        for line in fp:
+            match = search_for_a(line)
+            if match is not None:
+                url = html_decode(match.group(1))
+                url = strip_fragment(url)
+                path = html_decode(match.group(2))
+                print('{path}\t{url}'.format(url=url, path=path))
+
+try:
+    main()
+except BrokenPipeError:
+    signal.signal(signal.SIGPIPE, signal.SIG_DFL)
+    os.kill(os.getpid(), signal.SIGPIPE)
+    raise
+
+# vim:ts=4 sts=4 sw=4 et
