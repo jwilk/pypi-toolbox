@@ -9,6 +9,7 @@ dist: trusty
 before_install:
 - pyflakes=pyflakes
 - if [[ $TRAVIS_PYTHON_VERSION = 3.3 ]]; then pyflakes='pyflakes<2'; fi
+- if [[ $TRAVIS_PYTHON_VERSION = 3.3 ]]; then if_py34=:; fi
 install:
 - python3 -m pip install pydiatra $pyflakes
 script:
@@ -17,5 +18,6 @@ script:
 - ./pypi-list-classifiers | grep ' .. Python .. '
 - ./pypi-list-projects | grep -C5 -x argparse
 - ./pypi-list-projects argparse
+- $if_py34 ./pypi-list-files argparse
 
 # vim:ts=2 sts=2 sw=2 et
