@@ -23,14 +23,12 @@ urlquote = functools.partial(urllib.parse.quote, safe='')
 def main():
     if options.project is not None:
         proj = options.project
-        url = 'https://pypi.org/simple/{proj}/'.format(
-            proj=urlquote(proj)
-        )
+        url = f'https://pypi.org/simple/{urlquote(proj)}/'
         try:
             fp = urllib.request.urlopen(url)
         except urllib.error.HTTPError as exc:
             if exc.code == http.client.NOT_FOUND:
-                msg = '{prog}: {proj}: not found'.format(prog=ap.prog, proj=proj)
+                msg = f'{ap.prog}: {proj}: not found'
                 print(msg, file=sys.stderr)
                 sys.exit(1)
             else:
