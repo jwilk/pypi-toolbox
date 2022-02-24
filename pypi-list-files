@@ -4,6 +4,7 @@
 # SPDX-License-Identifier: MIT
 
 import argparse
+import functools
 import html
 import http.client
 import os
@@ -28,10 +29,12 @@ def strip_fragment(url):
     tup = tup._replace(fragment='')
     return urllib.parse.urlunsplit(tup)
 
+urlquote = functools.partial(urllib.parse.quote, safe='')
+
 def main():
     proj = options.project
     url = 'https://pypi.org/simple/{proj}/'.format(
-        proj=urllib.parse.quote(proj, safe='')
+        proj=urlquote(proj, safe='')
     )
     try:
         fp = urllib.request.urlopen(url)

@@ -4,6 +4,7 @@
 # SPDX-License-Identifier: MIT
 
 import argparse
+import functools
 import http.client
 import os
 import re
@@ -18,11 +19,13 @@ ap = argparse.ArgumentParser()
 ap.add_argument('project', metavar='PROJECT', nargs='?')
 options = ap.parse_args()
 
+urlquote = functools.partial(urllib.parse.quote, safe='')
+
 def main():
     if options.project is not None:
         proj = options.project
         url = 'https://pypi.org/simple/{proj}/'.format(
-            proj=urllib.parse.quote(proj, safe='')
+            proj=urlquote(proj)
         )
         try:
             fp = urllib.request.urlopen(url)
