@@ -42,7 +42,7 @@ def main():
             sys.exit(1)
         else:
             raise
-    search_for_a = re.compile(br'<a href="([^>]*)">([^<]+)</a>').search
+    search_for_a = re.compile(br'<a href="([^>]*)" *>([^<]+)</a>').search
     with fp:
         for line in fp:
             match = search_for_a(line)
