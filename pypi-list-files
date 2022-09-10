@@ -23,7 +23,7 @@ options = ap.parse_args()
 def html_decode(s):
     return html.unescape(s.decode('UTF-8'))
 
-def strip_fragment(url):
+def strip_url_fragment(url):
     tup = urllib.parse.urlsplit(url)
     tup = tup._replace(fragment='')
     return urllib.parse.urlunsplit(tup)
@@ -48,7 +48,7 @@ def main():
             match = search_for_a(line)
             if match is not None:
                 url = html_decode(match.group(1))
-                url = strip_fragment(url)
+                url = strip_url_fragment(url)
                 path = html_decode(match.group(2))
                 print(f'{path}\t{url}')
 
