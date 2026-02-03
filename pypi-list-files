@@ -18,6 +18,7 @@ import urllib.request
 0_0  # Python >= 3.6 is required
 
 ap = argparse.ArgumentParser()
+ap.color = False
 ap.add_argument('project', metavar='PROJECT')
 options = ap.parse_args()
 

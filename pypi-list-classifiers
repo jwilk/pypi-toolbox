@@ -12,6 +12,7 @@ import urllib.request
 rb''  # Python >= 3.3 is required
 
 ap = argparse.ArgumentParser()
+ap.color = False
 ap.parse_args()
 
 def main():
